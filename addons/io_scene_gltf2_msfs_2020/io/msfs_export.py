@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 # Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,7 +72,9 @@ class Export:
             return
         
         for image in gltf2_plan.images:
-            image.uri = os.path.basename(urllib.parse.unquote(image.uri))
+            # Embedded images use a bufferView (GLB) or a data URI.
+            if image.uri and not image.uri.startswith("data:"):
+                image.uri = os.path.basename(urllib.parse.unquote(image.uri))
 
     def gather_node_hook(
         self,

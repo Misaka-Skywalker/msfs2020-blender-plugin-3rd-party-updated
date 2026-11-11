@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 # Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -82,7 +86,10 @@ class MSFS2020_Material_IO:
     @staticmethod
     def create_image(index, import_settings):
         pytexture = import_settings.data.textures[index]
-        BlenderImage.create(import_settings, pytexture.source)
+        if bpy.app.version >= (5, 3, 0):
+            BlenderImage.create(import_settings, pytexture.source, use_ktx_loader=False)
+        else:
+            BlenderImage.create(import_settings, pytexture.source)
         pyimg = import_settings.data.images[pytexture.source]
 
         # Find image created
@@ -203,6 +210,10 @@ class MSFS2020_Material_IO:
     @staticmethod
     def export(gltf2_material, blender_material, export_settings):
         gltf2_material.alpha_mode = blender_material.msfs_alpha_mode
+        if bpy.app.version >= (5, 3, 0) and gltf2_material.alpha_mode == "MASK":
+            # The glTF exporter now derives the cutoff from nodes, while MSFS stores it on the material.
+            cutoff = blender_material.msfs_alpha_cutoff
+            gltf2_material.alpha_cutoff = cutoff if cutoff != 0.5 else None
         
         for extension in MSFS2020_Material_IO.extensions:
             extension.to_extension(blender_material, gltf2_material, export_settings)

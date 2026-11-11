@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 # Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +25,13 @@ import bpy
 
 bl_info = {
     "name": "Microsoft Flight Simulator 2020: glTF Extension",
-    "author": "Asobo Studio",
+    "author": "Asobo Studio and contributors; third-party updates by Misaka-Skywalker",
     "description": "This toolkit prepares your 3D assets to be used for Microsoft Flight Simulator 2020",
     "blender": (3, 3, 0),
-    "version": (3, 3, 2),
+    "version": (3, 3, 4),  # Third-party compatibility and localization update.
     "location": "File > Import-Export",
     "category": "Import-Export",
-    "tracker_url": "https://devsupport.flightsimulator.com/",
+    "tracker_url": "https://github.com/Misaka-Skywalker/msfs2020-blender-plugin-3rd-party-updated/issues",
 }
 
 
@@ -52,9 +56,9 @@ class MSFS2020_ImporterProperties(bpy.types.PropertyGroup):
 
 class MSFS2020_ExporterProperties(bpy.types.PropertyGroup):
     def msfs_enable_msfs_extension_update(self, context):
-        props = bpy.context.scene.msfs_exporter_settings
-        settings = bpy.context.scene.msfs_multi_exporter_settings
-        settings.enable_msfs_extension = props.enable_msfs_extension
+        settings = self.id_data.msfs_multi_exporter_settings
+        if settings.enable_msfs_extension != self.enable_msfs_extension:
+            settings.enable_msfs_extension = self.enable_msfs_extension
 
     enable_msfs_extension: bpy.props.BoolProperty(
         name="Microsoft Flight Simulator 2020 Extensions",

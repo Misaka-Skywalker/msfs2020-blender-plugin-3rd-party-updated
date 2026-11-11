@@ -1,124 +1,19 @@
-[![MSFS](misc/Logos/msfs_logo.png)](https://www.flightsimulator.com/)[![ASOBO](misc/Logos/asobo_logo.png)](https://www.asobostudio.com/) <img src="misc/Logos/glTF_logo.png" width="180" height="90">
+# MSFS2020 Blender Plugin — 3rd Party Updated
 
-# Microsoft Flight Simulator 2020 glTF 2.0 Importer and Exporter for Blender
+This is an **unofficial third-party update** of [Asobo Studio's official MSFS 2020 Blender add-on](https://github.com/AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO). It is not affiliated with or endorsed by Asobo Studio or Microsoft. The first public version, **3.3.4**, builds on upstream version **3.3.2**, fixes compatibility with Blender 5.3.0 (the latest stable target verified as of 2026-11-12), and adds lightweight Simplified Chinese translations. Please report bugs in this fork to [this repository](https://github.com/Misaka-Skywalker/msfs2020-blender-plugin-3rd-party-updated/issues), not to Asobo.
 
-This repository contains the current version of the official Microsoft Flight Simulator 2020 Blender Import/Export plugin. The flight sim community has already developed and forked the original project many times, and Asobo's intention is to fully support Blender with the help and contributions of all the developers that have already implemented features in the different unofficial Blender plugins.
+The add-on extends Blender's glTF importer and exporter with MSFS 2020 materials, lights, collision gizmos, unique IDs and multi-export/LOD tools. Keep Blender's built-in glTF 2.0 add-on enabled. The add-on cannot import glTF files already processed by the simulator's Package Builder and is not compatible with legacy FSX/P3D exporters.
 
-> Asobo would especially like to thank the following people: <br>
-> Vitus of [Wing42](https://wing42.com/), [tml1024](https://github.com/tml1024), [ronh991](https://github.com/ronh991), [pepperoni505](https://github.com/pepperoni505) of [FlyByWire](https://flybywiresim.com/)
+## Install
 
-> [!WARNING]
->- This addon cannot import glTF files that have been built into a Microsoft Flight Simulator 2020 package through the Sim's Package Builder.
->- This addon is **NOT compatible** with the legacy exporter developed for FSX and P3D.  Remove these plugin (Prefered) or disabled these plugins.
->- This addon need to have the `Import-Export: gltf 2.0 format` addon (gltf2 Khronos Blender IO) **enabled** to work. Do not remove it or disable it !
+Back up your `.blend` projects and resources first. Download the **`io_scene_gltf2_msfs_2020-blender-5.3.zip` release asset** from [Releases](https://github.com/Misaka-Skywalker/msfs2020-blender-plugin-3rd-party-updated/releases), not GitHub's automatically generated source ZIP. In Blender, choose **Edit > Preferences > Get Extensions > Install from Disk**, select the asset, and enable **Microsoft Flight Simulator 2020: glTF Extension**. Keep the built-in glTF add-on enabled. Import and export through **File > Import/Export > glTF 2.0**.
 
-> [!IMPORTANT]
-> Supported blender versions of the latest version of the addon (We can't guarantee not having bugs with other unstable versions):
-> - **3.3.x LTS**
-> - **3.6.x LTS**
-> - **4.2.x LTS**
-> - **4.5.x LTS**
+Simplified Chinese follows Blender's language and interface translation settings in Preferences; untranslated strings remain in English. There is no separate add-on language switch. For installation, validation, known issues and build instructions see the [English compatibility guide](Documentation/Blender-5.3.md) or [中文说明](Documentation/Blender-5.3-zh-CN.md). See also [compatibility notes](COMPATIBILITY.md). The [upstream documentation](Documentation/Documentation.md) is retained as upstream material and may not describe this fork's changes.
 
+## Validation and limitations
 
-*******
+On Windows with Blender **5.3.0 build 02f0899d78e3**, version 3.3.4 passed 22 automated tests both from source and after installation of the ZIP in an isolated profile, including language switching and translation cleanup. A separate GPU drawing and state restoration smoke test also passed. These use generated scenes; MSFS SDK and game validation has not been performed. Older Blender compatibility branches remain in the code but have not been retested; the project leaves room for future Blender compatibility updates. See the guide for three known inherited issues and the limits of the tests.
 
-# Summary
-- [How to Install the ASOBO Blender MSFS2020 Importer/Exporter using Blender:](#how-to-install-the-asobo-blender-msfs2020-importerexporter-using-blender)
-- [How to remove the Add-on](#how-to-remove-the-add-on)
-- [Migration of Legacy Blend File Material Types/Modes](#migration-of-legacy-blend-file-material-typesmodes)
-  - [Steps For Migration](#steps-for-migration)
-- [Documentation](#documentation)
-- [Notes On Shadertree](#notes-on-shadertree)
+## Attribution and license
 
-
-## How to Install the ASOBO Blender MSFS2020 Importer/Exporter using Blender:
-
-1. Go to the Releases section of the https://github.com/AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO repository. Then download the zip file `io_scene_gltf2_msfs_2020.zip` of the latest release.
-
-2. Open Blender and go to : Edit > Preferences.
-
-![Edit Preferences - Add](misc/Install/Edit_Pref.png)
-
-3. Go to Add-ons and click on Install an add-on. This will bring up a file dialog, where you navigate to the folder where you have your `io_scene_gltf2_msfs_2020.zip` downloaded file.
-
-4. Select the `io_scene_gltf2_msfs_2020.zip` file.  And click on the Install Add-on button.
-
-![Edit Preferences - Install](misc/Install/Edit_Pref_install.png)
-
-5. Enable the Add-on by clicking on the checkbox.
-
-![Edit Preferences - Enable](misc/Install/Enable_checkbox_addon.png)
-
-<br>
-
-# How to remove the Add-on
-
-1. If you previously installed the Microsoft Flight Simulator 2020 glTF Extensions Add-on, Remove/Delete the older version using the Blender Edit > Preferences Menu. 
-
-![Edit Preferences](misc/Install/Edit_Pref.png)
-
-
-2. Select the Add-ons tab. Search for the `Microsoft Flight Simulator 2020 glTF Extension` Importer/Exporter add-on in the search box. Delete the `Import-Export: Microsoft Flight Simulator 2020 gltf Extension` using the `Remove` button.<br>  
-:warning: DO NOT DELETE OR DISABLE THE `Import-Export: gltf 2.0 format` Add-on.
-
-![Search Remove](misc/Install/Edit_Pref_search_rem.png)
-
-3. You should now have only the `Import-Export: gltf 2.0 format` addon left.
-4. Close the Blender program.
-
-
-# Migration of Legacy Blend File Material Types/Modes
-
-This Blender addon is now the officially supported addon for Microsoft Flight Simulator 2020, and as such, blend files that were made using any other version/iteration of the addon are now considred *legacy* blend files. Basically, legacy blend files had the extensions that are used to create glTF 2.0 files for use in the Microsoft Flight Simulator 2020 hard-coded into them. However, the ASOBO version of the exporter uses the Khronos default code and adds hooks to this code for the ASOBO extensions used in the glTF files.
-
-The ASOBO exporter also has a much more complex and versitile material node structure that can be seen in the Shader Tab/Window in Blender. Your legacy Flight Simulator Material mode/types should be migrated to the new ASOBO Microsoft Flight SImulator 2020 material mode/types with the click of the "**`Migrate Material Data`**" button
-in the MSFS2020 Material Parameters panel (under the Blender Material Properties). 
-
-We have made every effort possible to ensure that legacy blend files can be easily and fully migrated to use this addon and exporter, and we recommend the migration to use this addon as soon as possible to ensure future compatibility as this addon evolves and is updated. 
-
-Once you have performed a migration, you should look at the shader nodes in your *original* blend file and make sure the BSDF node paramerters are the same as the panel values.  This is an important check to make as these can get out of sync when you modify the parameters in the `Surface` section of the `Material Properties` panel instead of modifying them in the `MSFS2020 Material Parameters` section. In particular, pay attention to the *Metallic* and *Roughness* Scale and Factor values.
-
-<br>
-
-## Steps For Migration
-
-1. Open your blend file.
-2. Select a node/mesh
-3. Open the `MSFS2020 Material Params` Panel in the Material Properties
-    - You will see a `Migrate Material Data` button above the MSFS2020 Material Params type drop down list.
-    - **DO NOT Select a MSFS2020 Material from the drop down**, this will erase the existing legacy data and you will lose all your material settings.
-4. Click on the "Migrate Material Data" button
-    - Your existing legacy material type/mode will be conoverted to the new ASOBO MSFS2020 material type shader node structure.
-
-Figure 1 Before migration
-
-![Before](misc/MaterialMigration/BeforeMigration.png)
-
-Figure 2 After Migration
-
-![After](misc/MaterialMigration/AfterMigration.png)
-
-All the settings from the legacy node structure are copied to the ASOBO exporter shader node structure. As you can see from the images above, the ASOBO node structure is more complex and there are a lot more nodes. Sometimes some model developers have made changes to the legacy BSDF node that are *not* reflected in the `MSFS2020 Material Params` panel data - the variables that are migrated come instead from the *legacy* panel data, so there may be situations where your material will not look correct. This means that you will need to compare your legacy blend file materials to the new blend file Materials after migration to see if there are any issues like this one. You can do this by openeing another Blender instance and opening the legacy file in that, then comparing the MSFS2020 Material Params panel values with the legacy parameter values and adjusting them accordingly.
-
-Note that each Microsoft Flight Simulator 2020 material will need to be migrated, but any mesh/nodes associated to that material will also have it's MSFS2020 Material Parameters migrated. 
-
-Finally, you may also notice that some MSFS2020 Material Parameters show data but *cannot* be adjusted. This is in keeping with the ASOBO 3DS Max exporter material parameters.  Please raise an issue if this is not to your requirements.
-
-## WARNING
-After migration SAVE YOUR FILE AS A NEW FILE and keep your legacy blend file for future reference.
-
-# Documentation
-If you want to learn how to use this add-on you can refer to the documentation page here :
-[Documentation for Microsoft Flight Simulator 2020 glTF 2.0 Importer and Exporter for Blender](./Documentation/Documentation.md)
-
-You can also have a look at the SDK documentation of the plugin here : https://docs.flightsimulator.com/html/Asset_Creation/Blender_Plugin/The_Blender_Plugin.htm
-
-# Notes On Shadertree
-
-Shadertree modification directly impacts the result of the exporter. 
-The properties of your material must only be modified through the `MSFS2020 Material Panel` section.
-
-:warning: If you work with an MSFS2020 Material you should never modify the shader tree manually.
-
-
-
+This fork builds on the original work by Asobo Studio and its contributors. Asobo especially thanked Vitus of [Wing42](https://wing42.com/), [tml1024](https://github.com/tml1024), [ronh991](https://github.com/ronh991), and [pepperoni505](https://github.com/pepperoni505) of [FlyByWire](https://flybywiresim.com/). The Khronos glTF exporter remains the copyright of its respective authors. See [NOTICE](NOTICE), [UPSTREAM.md](UPSTREAM.md), and the [Apache License 2.0](LICENSE.md).

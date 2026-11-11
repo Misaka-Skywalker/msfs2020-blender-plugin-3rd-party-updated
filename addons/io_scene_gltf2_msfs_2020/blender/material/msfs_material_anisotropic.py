@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 # Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,6 +15,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import bpy
+
 from ..msfs_material_function import MSFS2020_Material
 from .utils.msfs_material_enum import (
     MSFS2020_AnisotropicNodes,
@@ -44,9 +50,14 @@ class MSFS2020_Anisotropic(MSFS2020_Material):
         
         ## Separate Anisotropic
         # In[0] : Anisotropic Texture -> Out[0]
+        separator = (
+            MSFS2020_ShaderNodesTypes.shaderNodeSeparateColor
+            if bpy.app.version >= (3, 3, 0)
+            else MSFS2020_ShaderNodesTypes.shaderNodeSeparateRGB
+        )
         separateAnisotropicNode = self.addNode(
             name = MSFS2020_AnisotropicNodes.separateAnisotropic.value,
-            typeNode = "ShaderNodeSeparateRGB",
+            typeNode = separator.value,
             location = (-100.0, -800.0),
             width = 300.0,
             frame = anisotropicFrame)

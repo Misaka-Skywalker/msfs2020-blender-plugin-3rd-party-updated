@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 
 import bpy
 
@@ -156,5 +160,5 @@ class MSFS2020_PrincipledBSDFInputs(Enum):
         clearcoatRoughness = "Clearcoat Roughness"
     else:
         emission = "Emission Color"
-        clearcoat = "Coat Tint"
+        clearcoat = "Coat Weight"
         clearcoatRoughness = "Coat Roughness"

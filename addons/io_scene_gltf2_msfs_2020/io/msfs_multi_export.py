@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 # Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -198,6 +202,22 @@ def export_blender_3_6(file_path, settings):
 
 
 def export_blender_4_2(file_path, settings):
+    # Blender 5.x generalized WebP options to support multiple compressed formats.
+    # Keep saved MSFS presets and their WebP semantics unchanged.
+    properties = bpy.ops.export_scene.gltf.get_rna_type().properties
+    add_webp = False if settings.enable_msfs_extension else settings.export_image_add_webp
+    webp_fallback = False if settings.enable_msfs_extension else settings.export_image_webp_fallback
+    if "export_image_add_compressed_images" in properties:
+        image_options = {
+            "export_image_add_compressed_images": add_webp,
+            "export_compressed_images_fallback": webp_fallback,
+            "export_compressed_images_type": "WEBP",
+        }
+    else:
+        image_options = {
+            "export_image_add_webp": add_webp,
+            "export_image_webp_fallback": webp_fallback,
+        }
     return bpy.ops.export_scene.gltf(
         filepath=file_path,
         check_existing=True,
@@ -283,14 +303,6 @@ def export_blender_4_2(file_path, settings):
         export_vertex_color=settings.export_vertex_color,
         export_all_vertex_colors=settings.export_all_vertex_colors,
         export_active_vertex_color_when_no_material=settings.export_active_vertex_color_when_no_material,
-        export_image_add_webp=(
-            False if settings.enable_msfs_extension else settings.export_image_add_webp
-        ),
-        export_image_webp_fallback=(
-            False
-            if settings.enable_msfs_extension
-            else settings.export_image_webp_fallback
-        ),
         export_unused_images=(
             False if settings.enable_msfs_extension else settings.export_unused_images
         ),
@@ -313,6 +325,7 @@ def export_blender_4_2(file_path, settings):
             else settings.export_import_convert_lighting_mode
         ),
         export_optimize_disable_viewport=settings.export_optimize_disable_viewport,
+        **image_options,
     )
 
 

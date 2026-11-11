@@ -1,3 +1,7 @@
+# Modified 2026-11-12 by the third-party fork: Blender compatibility updates.
+# Upstream: AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO (Apache-2.0).
+# See the repository CHANGELOG.md and UPSTREAM.md for modification details.
+
 # Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import bgl as bgl
 import bmesh
 import bpy
 import gpu
@@ -108,7 +111,11 @@ class MSFS2020CollisionGizmo(bpy.types.Gizmo):
             self.custom_shape = None
 
     def draw_line_3d(self, color, width, region, pos):
-        shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
+        shader_name = (
+            "POLYLINE_UNIFORM_COLOR" if bpy.app.version >= (4, 0, 0)
+            else "3D_POLYLINE_UNIFORM_COLOR"
+        )
+        shader = gpu.shader.from_builtin(shader_name)
         batch = batch_for_shader(shader, "LINES", {"pos": pos})
         shader.bind()
         shader.uniform_float("color", color)
@@ -201,10 +208,6 @@ class MSFS2020CollisionGizmo(bpy.types.Gizmo):
         
         matrix = self.get_matrix()
 
-        bgl.glEnable(bgl.GL_BLEND)
-        bgl.glEnable(bgl.GL_LINE_SMOOTH)
-        bgl.glEnable(bgl.GL_DEPTH_TEST)
-
         # Use Blender theme colors to keep everything consistent
         draw_color = list(context.preferences.themes[0].view_3d.empty)
         if self.empty.select_get():
@@ -221,17 +224,16 @@ class MSFS2020CollisionGizmo(bpy.types.Gizmo):
 
             vertex_pos.extend([line_start, line_end])
 
-        self.draw_line_3d(
-            draw_color,
-            2,
-            context.region,
-            vertex_pos
-        )
-
-        # Restore OpenGL defaults
-        bgl.glLineWidth(1)
-        bgl.glDisable(bgl.GL_BLEND)
-        bgl.glDisable(bgl.GL_LINE_SMOOTH)
+        # Preserve the viewport state, including when shader drawing fails.
+        previous_blend = gpu.state.blend_get()
+        previous_depth_test = gpu.state.depth_test_get()
+        try:
+            gpu.state.blend_set("ALPHA")
+            gpu.state.depth_test_set("LESS_EQUAL")
+            self.draw_line_3d(draw_color, 2, context.region, vertex_pos)
+        finally:
+            gpu.state.blend_set(previous_blend)
+            gpu.state.depth_test_set(previous_depth_test)
 
     def apply_vert_transforms(self, vert, matrix):
         vert = list(vert.co)

@@ -1,0 +1,27 @@
+MSFS2020 Blender Plugin - 3rd Party Updated
+
+This distribution is a third-party modification of the official Asobo Studio
+Microsoft Flight Simulator 2020 glTF Blender importer/exporter:
+https://github.com/AsoboStudio/Microsoft-Flight-Simulator-2020-glTF-Blender-IO
+
+Upstream copyright notice retained:
+Copyright 2021-2022 The glTF-Blender-IO-MSFS-2020 authors.
+
+The original work and this distribution are provided under the Apache License,
+Version 2.0. See LICENSE.md. Original copyright and attribution notices remain
+in the source. This NOTICE was added by the third-party fork; the imported
+upstream snapshot did not include a NOTICE file.
+
+The upstream project acknowledges Vitus of Wing42, tml1024, ronh991, and
+pepperoni505 of FlyByWire. This fork preserves those acknowledgments.
+
+Blender's bundled Khronos glTF importer/exporter is a dependency, not bundled
+in this archive. Its authors retain their respective copyright and license.
+
+Third-party modifications: Blender 5.3 API compatibility, regression tests,
+partial Simplified Chinese UI translations, documentation and packaging.
+See UPSTREAM.md and CHANGELOG.md for provenance and changes.
+
+This fork is maintained separately from Asobo Studio and Microsoft. It is not
+an official release and is not endorsed by either company. Product names and
+trademarks belong to their respective owners; no trademark rights are granted.

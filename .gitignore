@@ -1,3 +1,4 @@
+# Modified by the third-party fork: ignore local build and test artifacts.
 .idea
 __pycache__
 *.pyc
@@ -5,3 +6,6 @@ __pycache__
 *.code-workspace
 .vscode
 .history
+/Microsoft-Flight-Simulator-2020-glTF-Blender-IO-main.zip
+/dist/
+/test-output/
